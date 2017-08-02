@@ -20,7 +20,7 @@ import models.PhotoDetails
 
 class HomeScreenAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
   var searchedList: Array<PhotoDetails>? = null
-    set(value){
+    set(value) {
       field = value
     }
 

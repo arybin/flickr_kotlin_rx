@@ -13,7 +13,8 @@ import java.lang.ref.WeakReference
  */
 
 
-class MainActivityRepository(val callback: WeakReference<RepositoryCallbacks<FlickrResponse>>) : AbstractRepository() {
+class MainActivityRepository(
+    val callback: WeakReference<RepositoryCallbacks<FlickrResponse>>) : AbstractRepository() {
 
   fun requestSearch(searchParameter: String) {
     disposables.add(ApiManager.getFlickrService()
@@ -21,11 +22,11 @@ class MainActivityRepository(val callback: WeakReference<RepositoryCallbacks<Fli
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-            {response: FlickrResponse ->
+            { response: FlickrResponse ->
               callback.get()?.onLoadFinished(response)
               Timber.d("Response came back")
             },
-            {error -> callback.get()?.onError(error)}
+            { error -> callback.get()?.onError(error) }
         ))
   }
 }

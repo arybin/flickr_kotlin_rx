@@ -7,20 +7,20 @@ import service.FlickrApi
 
 class ApiManager {
 
-    companion object {
-      private val retrofit: Retrofit =
-          Retrofit.Builder()
-              .baseUrl(Constants.BASE_FLICKR_URL)
-              .addConverterFactory(GsonConverterFactory.create())
-              .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-              .build()
+  companion object {
+    private val retrofit: Retrofit =
+        Retrofit.Builder()
+            .baseUrl(Constants.BASE_FLICKR_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
 
-      private val flickr = retrofit.create(FlickrApi::class.java)
+    private val flickr = retrofit.create(FlickrApi::class.java)
 
-      fun getFlickrService() : FlickrApi {
-        return flickr
-      }
+    fun getFlickrService(): FlickrApi {
+      return flickr
     }
+  }
 
 
 }
