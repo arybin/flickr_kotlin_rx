@@ -12,12 +12,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.flickr_row.view.flickrImagePreview
 import models.PhotoDetails
 
-
-/**
- * Created by arybin on 8/1/17.
- */
-
-
 class HomeScreenAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
   var searchedList: Array<PhotoDetails>? = null
     set(value) {
@@ -30,11 +24,7 @@ class HomeScreenAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
     }
   }
 
-  override fun getItemCount(): Int {
-    searchedList?.let {
-      return it.size
-    } ?: return 0
-  }
+  override fun getItemCount(): Int = searchedList?.size ?: 0
 
   override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): FlickrViewHolder {
     val view = LayoutInflater.from(parent?.context).inflate(R.layout.flickr_row, parent, false)
@@ -59,8 +49,5 @@ class HomeScreenAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
       val intent = FullPhotoActivity.newIntent(imageURL, imageId, context)
       context.startActivity(intent)
     }
-
-    //add on click listener
   }
-
 }

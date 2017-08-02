@@ -10,9 +10,6 @@ import models.FlickrResponse
 import okhttp3.ResponseBody
 import java.lang.ref.WeakReference
 
-/**
- * Created by arybin on 8/1/17.
- */
 interface FullPhotoCallback : RepositoryCallbacks<FlickrResponse> {
   fun setPath(path: String?)
 }

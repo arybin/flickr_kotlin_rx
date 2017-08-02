@@ -8,11 +8,6 @@ import models.FlickrResponse
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
-/**
- * Created by arybin on 8/1/17.
- */
-
-
 class MainActivityRepository(
     val callback: WeakReference<RepositoryCallbacks<FlickrResponse>>) : AbstractRepository() {
 

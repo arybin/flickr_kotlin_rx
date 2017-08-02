@@ -21,6 +21,13 @@ import repositories.RepositoryCallbacks
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
+/*
+This is just a sample app that queries the Flickr API and shows the images corresponding to the parameters
+This app needs tests added to it, which I haven't done for the sake of time
+I added the extra feature to be able to share the image with other apps that accepts the intent of sharing images
+Also, added an ability to download an image, it's not perfect and needs to be tested more
+ */
+
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener, RepositoryCallbacks<FlickrResponse> {
 
 
@@ -41,7 +48,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener, Reposi
     setContentView(R.layout.activity_main)
     pictureList.apply {
       itemAnimator = DefaultItemAnimator()
-      layoutManager = GridLayoutManager(context, 3)
+      layoutManager = GridLayoutManager(context, SPAN_COUNT)
     }
 
     mainActivityRepository = MainActivityRepository(
@@ -114,5 +121,6 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener, Reposi
 
   companion object {
     private const val SEARCH_TERM = "searchTerm"
+    private const val SPAN_COUNT = 3
   }
 }
