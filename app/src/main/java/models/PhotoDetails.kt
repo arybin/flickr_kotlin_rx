@@ -1,4 +1,4 @@
-package com.example.andreirybin.janetest.activities.models
+package models
 
 import com.google.gson.annotations.SerializedName
 

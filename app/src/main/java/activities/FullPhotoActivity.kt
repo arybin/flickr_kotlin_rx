@@ -1,4 +1,4 @@
-package com.example.andreirybin.janetest.activities.activities
+package activities
 
 import android.content.Context
 import android.content.Intent
@@ -9,11 +9,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.andreirybin.janetest.R
-import com.example.andreirybin.janetest.activities.models.FlickrResponse
-import com.example.andreirybin.janetest.activities.repositories.FullPhotoCallback
-import com.example.andreirybin.janetest.activities.repositories.FullPhotoRepository
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_full_photo.*
+import kotlinx.android.synthetic.main.activity_full_photo.imagePreview
+import kotlinx.android.synthetic.main.activity_full_photo.photoDescription
+import kotlinx.android.synthetic.main.activity_full_photo.photoTitle
+import models.FlickrResponse
+import repositories.FullPhotoCallback
+import repositories.FullPhotoRepository
 import timber.log.Timber
 import java.io.File
 import java.lang.ref.WeakReference
@@ -76,6 +78,7 @@ class FullPhotoActivity: AppCompatActivity(), FullPhotoCallback {
             }
 
             R.id.download_photo -> {
+                //TODO this should be tested, and perhaps in its own service but for the sake of time it's here
                 photoRepository?.downloadImage(imageURL, imageId)
                 return true
             }

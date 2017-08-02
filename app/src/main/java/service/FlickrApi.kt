@@ -1,9 +1,9 @@
-package com.example.andreirybin.janetest.activities.service
+package service
 
-import retrofit2.http.GET
-import com.example.andreirybin.janetest.activities.models.FlickrResponse
 import io.reactivex.Observable
+import models.FlickrResponse
 import okhttp3.ResponseBody
+import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
 

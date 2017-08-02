@@ -1,12 +1,12 @@
-package com.example.andreirybin.janetest.activities.repositories
+package repositories
 
-import com.example.andreirybin.janetest.activities.activities.FullPhotoActivity
-import com.example.andreirybin.janetest.activities.models.FlickrResponse
+import activities.FullPhotoActivity
 import com.example.andreirybin.janetest.activities.util.ApiManager
 import com.example.andreirybin.janetest.activities.util.Constants
 import com.example.andreirybin.janetest.activities.util.DownloadManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import models.FlickrResponse
 import okhttp3.ResponseBody
 import java.lang.ref.WeakReference
 

@@ -1,16 +1,16 @@
-package com.example.andreirybin.janetest.activities.adapters
+package adapters
 
+import activities.FullPhotoActivity
+import adapters.HomeScreenAdapter.FlickrViewHolder
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.andreirybin.janetest.R
-import com.example.andreirybin.janetest.activities.activities.FullPhotoActivity
-import com.example.andreirybin.janetest.activities.adapters.HomeScreenAdapter.FlickrViewHolder
-import com.example.andreirybin.janetest.activities.models.PhotoDetails
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.flickr_row.view.flickrImagePreview
+import models.PhotoDetails
 
 
 /**

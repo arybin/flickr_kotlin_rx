@@ -1,10 +1,10 @@
-package com.example.andreirybin.janetest.activities.repositories
+package repositories
 
-import com.example.andreirybin.janetest.activities.models.FlickrResponse
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import com.example.andreirybin.janetest.activities.util.ApiManager
 import com.example.andreirybin.janetest.activities.util.Constants
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import models.FlickrResponse
 import timber.log.Timber
 import java.lang.ref.WeakReference
 

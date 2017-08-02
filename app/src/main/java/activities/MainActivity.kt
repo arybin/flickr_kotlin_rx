@@ -1,22 +1,23 @@
-package com.example.andreirybin.janetest.activities.activities
+package activities
 
+import adapters.HomeScreenAdapter
 import android.app.SearchManager
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.View
 import com.example.andreirybin.janetest.R
-import com.example.andreirybin.janetest.activities.repositories.MainActivityRepository
-import com.example.andreirybin.janetest.activities.adapters.HomeScreenAdapter
-import com.example.andreirybin.janetest.activities.models.FlickrResponse
-import com.example.andreirybin.janetest.activities.repositories.RepositoryCallbacks
-
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.mainLayout
+import kotlinx.android.synthetic.main.activity_main.pictureList
+import kotlinx.android.synthetic.main.activity_main.progressBar
+import models.FlickrResponse
+import repositories.MainActivityRepository
+import repositories.RepositoryCallbacks
 import timber.log.Timber
 import java.lang.ref.WeakReference
 

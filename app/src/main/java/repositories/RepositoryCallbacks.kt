@@ -1,4 +1,4 @@
-package com.example.andreirybin.janetest.activities.repositories
+package repositories
 
 /**
  * Created by arybin on 8/1/17.

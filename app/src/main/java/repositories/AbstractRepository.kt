@@ -1,4 +1,4 @@
-package com.example.andreirybin.janetest.activities.repositories
+package repositories
 
 import io.reactivex.disposables.CompositeDisposable
 
