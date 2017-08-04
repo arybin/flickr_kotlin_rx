@@ -1,6 +1,6 @@
 package activities
 
-import adapters.HomeScreenAdapter
+import adapters.SearchAdapter
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.mainLayout
 import kotlinx.android.synthetic.main.activity_main.pictureList
 import kotlinx.android.synthetic.main.activity_main.progressBar
 import models.FlickrResponse
-import repositories.MainActivityRepository
+import repositories.SearchRepository
 import repositories.RepositoryCallbacks
 import timber.log.Timber
 import java.lang.ref.WeakReference
@@ -33,14 +33,14 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener, Reposi
 
   override fun onLoadFinished(response: FlickrResponse?) {
     progressBar.visibility = View.GONE
-    flickrAdapter = pictureList.adapter as? HomeScreenAdapter ?: HomeScreenAdapter()
+    flickrAdapter = pictureList.adapter as? SearchAdapter ?: SearchAdapter()
     flickrAdapter?.searchedList = response?.mPhoto?.mPhotoDetailsList
     flickrAdapter?.notifyDataSetChanged()
     pictureList.adapter = flickrAdapter
   }
 
-  private var mainActivityRepository: MainActivityRepository? = null
-  private var flickrAdapter: HomeScreenAdapter? = null
+  private var mainActivityRepository: SearchRepository? = null
+  private var flickrAdapter: SearchAdapter? = null
   private var searchString: String? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener, Reposi
       layoutManager = GridLayoutManager(context, SPAN_COUNT)
     }
 
-    mainActivityRepository = MainActivityRepository(
+    mainActivityRepository = SearchRepository(
         WeakReference(this))
     progressBar.visibility = View.GONE
   }

@@ -1,4 +1,4 @@
-package com.example.andreirybin.janetest.activities.util
+package util
 
 class Constants {
   companion object {

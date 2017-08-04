@@ -1,7 +1,7 @@
 package adapters
 
 import activities.FullPhotoActivity
-import adapters.HomeScreenAdapter.FlickrViewHolder
+import adapters.SearchAdapter.FlickrViewHolder
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.flickr_row.view.flickrImagePreview
 import models.PhotoDetails
 
-class HomeScreenAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
+class SearchAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
   var searchedList: Array<PhotoDetails>? = null
     set(value) {
       field = value

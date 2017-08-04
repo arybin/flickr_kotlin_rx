@@ -1,4 +1,4 @@
-package service
+package api
 
 import io.reactivex.Observable
 import models.FlickrResponse

@@ -1,9 +1,9 @@
 package repositories
 
 import activities.FullPhotoActivity
-import com.example.andreirybin.janetest.activities.util.ApiManager
-import com.example.andreirybin.janetest.activities.util.Constants
-import com.example.andreirybin.janetest.activities.util.DownloadManager
+import api.ApiManager
+import util.Constants
+import util.DownloadManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import models.FlickrResponse

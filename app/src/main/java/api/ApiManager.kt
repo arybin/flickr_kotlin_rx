@@ -1,9 +1,9 @@
-package com.example.andreirybin.janetest.activities.util
+package api
 
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import service.FlickrApi
+import util.Constants
 
 class ApiManager {
 

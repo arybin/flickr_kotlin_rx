@@ -1,4 +1,4 @@
-package com.example.andreirybin.janetest.activities.util
+package util
 
 import android.content.Context
 import okhttp3.ResponseBody
