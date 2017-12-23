@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion "$rootProject.ext.buildToolsVersion"
     defaultConfig {
         applicationId "com.example.andreirybin.janetest"
-        minSdkVersion 21
-        targetSdkVersion 27
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -26,10 +26,10 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    api 'com.android.support:appcompat-v7:27.0.2'
-    api 'com.android.support:design:27.0.2'
+    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    api "com.android.support:design:$rootProject.ext.supportLibraryVersion"
     api "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    api 'com.android.support:recyclerview-v7:27.0.2'
+    api "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
     api 'com.squareup.retrofit2:retrofit:2.3.0'
     api 'com.squareup.retrofit2:converter-gson:2.3.0'
     api 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
