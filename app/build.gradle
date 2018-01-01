@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion "$rootProject.ext.buildToolsVersion"
+    buildToolsVersion "$buildToolsVersion"
     defaultConfig {
         applicationId "com.example.andreirybin.janetest"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -21,15 +21,21 @@ android {
     }
 }
 
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-    api "com.android.support:design:$rootProject.ext.supportLibraryVersion"
+    api "com.android.support:design:$supportLibraryVersion"
     api "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    api "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
+    api "com.android.support:recyclerview-v7:$supportLibraryVersion"
     api 'com.squareup.retrofit2:retrofit:2.3.0'
     api 'com.squareup.retrofit2:converter-gson:2.3.0'
     api 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
@@ -37,6 +43,26 @@ dependencies {
     api 'io.reactivex.rxjava2:rxjava:2.1.0'
     api 'io.reactivex.rxjava2:rxandroid:2.0.1'
     api 'com.jakewharton.timber:timber:4.6.0'
+
+    //Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.19.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:0.19.3'
+
+    //Anko coroutines
+    implementation "org.jetbrains.anko:anko-coroutines:$ankoVersion"
+
+    // Anko Layouts
+    compile "org.jetbrains.anko:anko-sdk25:$ankoVersion"
+    compile "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion"
+    compile 'org.jetbrains.anko:anko-cardview-v7:0.10.3'
+
+
+    // Coroutine listeners for Anko Layouts
+    compile "org.jetbrains.anko:anko-sdk25-coroutines:$ankoVersion"
+    compile "org.jetbrains.anko:anko-appcompat-v7-coroutines:$ankoVersion"
+
+
 }
 repositories {
     mavenCentral()

@@ -4,19 +4,17 @@ import activities.FullPhotoActivity
 import adapters.SearchAdapter.FlickrViewHolder
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.andreirybin.janetest.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.flickr_row.view.flickrImagePreview
 import models.PhotoDetails
+import org.jetbrains.anko.AnkoContext.Companion
+import views.FlickrRowCell
 
 class SearchAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
   var searchedList: Array<PhotoDetails>? = null
-    set(value) {
-      field = value
-    }
+
 
   override fun onBindViewHolder(holder: FlickrViewHolder?, position: Int) {
     searchedList?.let {
@@ -26,8 +24,9 @@ class SearchAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
 
   override fun getItemCount(): Int = searchedList?.size ?: 0
 
-  override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): FlickrViewHolder {
-    val view = LayoutInflater.from(parent?.context).inflate(R.layout.flickr_row, parent, false)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlickrViewHolder {
+    val view = FlickrRowCell().createView(Companion.create(parent.context, false))
+    //val view = LayoutInflater.from(parent.context).inflate(R.layout.flickr_row, parent, false)
     return FlickrViewHolder(view)
   }
 

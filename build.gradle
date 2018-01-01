@@ -34,4 +34,5 @@ ext {
     buildToolsVersion = '27.0.3'
     espressoVersion = '2.2.1'
     supportLibraryVersion = '27.0.2'
+    ankoVersion='0.10.4'
 }
