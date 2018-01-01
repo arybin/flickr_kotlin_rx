@@ -17,6 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.mainLayout
 import kotlinx.android.synthetic.main.activity_main.pictureList
 import kotlinx.android.synthetic.main.activity_main.progressBar
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import models.FlickrResponse
 import repositories.SearchRepository
@@ -72,7 +73,8 @@ class MainActivity : AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .skip(1)
                     .subscribe { text ->
-                        async {
+                        progressBar?.visibility = View.VISIBLE
+                        async(UI) {
                             try {
                                 val result = mainActivityRepository?.requestSearchAsync(text.toString())
                                 onLoadFinished(result)
