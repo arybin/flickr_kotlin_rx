@@ -6,27 +6,25 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
+import timber.log.Timber
 
 //credit goes to https://github.com/gildor/kotlin-coroutines-retrofit/blob/master/src/main/kotlin/ru/gildor/coroutines/retrofit/CallAwait.kt
+//slightly modified with some code from: https://github.com/elpassion/crweather/blob/master/app/src/main/java/com/elpassion/crweather/CommonUtils.kt
+//slightly more modified by me
 
 /**
  * Suspend extension that allows suspend [Call] inside coroutine.
  *
  * @return Result of request or throw exception
  */
-public suspend fun <T : Any> Call<T>.await(): T {
-  return suspendCancellableCoroutine { continuation ->
+public suspend fun <T : Any> Call<T>.await(): T = suspendCancellableCoroutine { continuation ->
     enqueue(object : Callback<T> {
       override fun onResponse(call: Call<T>?, response: Response<T?>) {
         if (response.isSuccessful) {
           val body = response.body()
-          if (body == null) {
-            continuation.resumeWithException(
-                NullPointerException("Response body is null: $response")
-            )
-          } else {
-            continuation.resume(body)
-          }
+          body?.let {
+            continuation.resume(it)
+          } ?: continuation.resumeWithException(NullPointerException("Response body is null: $response"))
         } else {
           continuation.resumeWithException(HttpException(response))
         }
@@ -40,7 +38,7 @@ public suspend fun <T : Any> Call<T>.await(): T {
     })
 
     registerOnCompletion(continuation)
-  }
+
 }
 
 /**
@@ -78,12 +76,10 @@ public suspend fun <T : Any> Call<T>.awaitResult(): Result<T> {
       override fun onResponse(call: Call<T>?, response: Response<T>) {
         continuation.resume(
             if (response.isSuccessful) {
-              val body = response.body()
-              if (body == null) {
-                Result.Exception(NullPointerException("Response body is null"))
-              } else {
-                Result.Ok(body, response.raw())
-              }
+              response.body()?.let {
+                  Result.Ok(it, response.raw())
+              } ?: Result.Exception(NullPointerException("Response body is null"))
+
             } else {
               Result.Error(HttpException(response), response.raw())
             }
@@ -108,6 +104,7 @@ private fun Call<*>.registerOnCompletion(continuation: CancellableContinuation<*
         cancel()
       } catch (ex: Throwable) {
         //Ignore cancel exception
+        Timber.wtf(ex, "Error cancelling request")
       }
   }
 }

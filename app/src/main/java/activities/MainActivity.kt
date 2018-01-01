@@ -8,18 +8,21 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.View
+import android.widget.SearchView
 import com.example.andreirybin.janetest.R
+import com.jakewharton.rxbinding2.widget.RxSearchView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.mainLayout
 import kotlinx.android.synthetic.main.activity_main.pictureList
 import kotlinx.android.synthetic.main.activity_main.progressBar
+import kotlinx.coroutines.experimental.async
 import models.FlickrResponse
 import repositories.SearchRepository
-import repositories.RepositoryCallbacks
 import timber.log.Timber
 import java.lang.ref.WeakReference
+import java.util.concurrent.TimeUnit
 
 /*
 This is just a sample app that queries the Flickr API and shows the images corresponding to the parameters
@@ -28,99 +31,81 @@ I added the extra feature to be able to share the image with other apps that acc
 Also, added an ability to download an image, it's not perfect and needs to be tested more
  */
 
-class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener, RepositoryCallbacks<FlickrResponse> {
+class MainActivity : AppCompatActivity() {
 
+    private var mainActivityRepository: SearchRepository? = null
+    private var flickrAdapter: SearchAdapter? = null
+    private var searchString: String? = null
 
-  override fun onLoadFinished(response: FlickrResponse?) {
-    progressBar.visibility = View.GONE
-    flickrAdapter = pictureList.adapter as? SearchAdapter ?: SearchAdapter()
-    flickrAdapter?.searchedList = response?.mPhoto?.mPhotoDetailsList
-    flickrAdapter?.notifyDataSetChanged()
-    pictureList.adapter = flickrAdapter
-  }
-
-  private var mainActivityRepository: SearchRepository? = null
-  private var flickrAdapter: SearchAdapter? = null
-  private var searchString: String? = null
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    pictureList.apply {
-      itemAnimator = DefaultItemAnimator()
-      layoutManager = GridLayoutManager(context, SPAN_COUNT)
+    private fun onLoadFinished(response: FlickrResponse?) {
+        progressBar.visibility = View.GONE
+        flickrAdapter = pictureList.adapter as? SearchAdapter ?: SearchAdapter()
+        flickrAdapter?.searchedList = response?.mPhoto?.mPhotoDetailsList
+        flickrAdapter?.notifyDataSetChanged()
+        pictureList.adapter = flickrAdapter
     }
 
-    mainActivityRepository = SearchRepository(
-        WeakReference(this))
-    progressBar.visibility = View.GONE
-  }
 
-  private fun makeNetworkRequest(searchString: String) {
-    progressBar.visibility = View.VISIBLE
-    mainActivityRepository?.requestSearch(searchString)
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        pictureList.apply {
+            itemAnimator = DefaultItemAnimator()
+            layoutManager = GridLayoutManager(context, SPAN_COUNT)
+        }
 
-
-  override fun onError(t: Throwable) {
-    val error = "Error when searching Flickr"
-    Timber.wtf(t, error)
-    Snackbar.make(mainLayout, error, Snackbar.LENGTH_SHORT).show()
-  }
-
-  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-    menuInflater.inflate(R.menu.activity_main_menu, menu)
-    val searchManager = getSystemService(Context.SEARCH_SERVICE) as? SearchManager
-    val searchMenuItem = menu?.findItem(R.id.menu_search)
-    val searchView = searchMenuItem?.actionView as? SearchView
-
-    searchView?.setSearchableInfo(searchManager?.getSearchableInfo(componentName))
-    searchView?.isSubmitButtonEnabled = true
-    searchView?.setOnQueryTextListener(this)
-
-    return true
-  }
-
-  override fun onQueryTextSubmit(query: String?): Boolean {
-    return false
-  }
-
-  override fun onQueryTextChange(newText: String?): Boolean {
-    newText?.let {
-      searchString = it
-      makeNetworkRequest(it)
-      return true
-    } ?: return false
-  }
-
-  override fun onSaveInstanceState(outState: Bundle?) {
-    super.onSaveInstanceState(outState)
-    outState?.putString(SEARCH_TERM, searchString)
-  }
-
-  override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-    super.onRestoreInstanceState(savedInstanceState)
-    searchString = savedInstanceState?.getString(SEARCH_TERM)
-
-    searchString?.let {
-      makeNetworkRequest(it)
+        mainActivityRepository = SearchRepository()
+        progressBar.visibility = View.GONE
     }
-  }
 
-  override fun onResume() {
-    super.onResume()
-    searchString?.let {
-      makeNetworkRequest(it)
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_main_menu, menu)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as? SearchManager
+        val searchMenuItem = menu?.findItem(R.id.menu_search)
+        val searchView = searchMenuItem?.actionView as? SearchView
+
+        searchView?.queryHint = getString(R.string.search_photos)
+        searchView?.let {
+            RxSearchView.queryTextChanges(it)
+                    .debounce(500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .skip(1)
+                    .subscribe { text ->
+                        async {
+                            try {
+                                val result = mainActivityRepository?.requestSearchAsync(text.toString())
+                                onLoadFinished(result)
+
+                            } catch (e: Exception) {
+                                Timber.wtf(e, "Error requesting images from Flickr for $text")
+                            }
+                        }
+                    }
+        }
+        searchView?.setSearchableInfo(searchManager?.getSearchableInfo(componentName))
+        return true
     }
-  }
 
-  override fun onDestroy() {
-    mainActivityRepository?.clearDisposables()
-    super.onDestroy()
-  }
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString(SEARCH_TERM, searchString)
+    }
 
-  companion object {
-    private const val SEARCH_TERM = "searchTerm"
-    private const val SPAN_COUNT = 3
-  }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        searchString = savedInstanceState?.getString(SEARCH_TERM)
+
+    }
+
+
+    override fun onDestroy() {
+        mainActivityRepository?.clearDisposables()
+        super.onDestroy()
+    }
+
+    companion object {
+        private const val SEARCH_TERM = "searchTerm"
+        private const val SPAN_COUNT = 3
+    }
 }
