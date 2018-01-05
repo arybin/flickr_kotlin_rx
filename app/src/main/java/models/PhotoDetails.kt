@@ -1,5 +1,7 @@
 package models
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 class FlickrResponse {
@@ -26,14 +28,26 @@ class PhotoFlickr {
 }
 
 
-class PhotoDetails {
-  @SerializedName("id") var mId: String? = null
-  @SerializedName("owner") var mOwner: String? = null
-  @SerializedName("secret") var mSecret: String? = null
-  @SerializedName("server") var mServer: String? = null
-  @SerializedName("farm") var mFarm: Int? = null
-  @SerializedName("title") var mTitle: String? = null
-  @SerializedName("ispublic") var mIsPublic: Int? = null
-  @SerializedName("isfriend") var mIsFriend: Int? = null
-  @SerializedName("isfamily") var mIsFamily: Int? = null
+@Entity(tableName = PHOTO_DETAILS_TABLE_NAME)
+data class PhotoDetails(
+
+        @PrimaryKey @SerializedName("id") var mId: String,
+        @SerializedName("owner") var mOwner: String? = null,
+        @SerializedName("secret") var mSecret: String? = null,
+        @SerializedName("server") var mServer: String? = null,
+        @SerializedName("farm") var mFarm: Int? = null,
+        @SerializedName("title") var mTitle: String? = null,
+        @SerializedName("ispublic") var mIsPublic: Int? = null,
+        @SerializedName("isfriend") var mIsFriend: Int? = null,
+        @SerializedName("isfamily") var mIsFamily: Int? = null) {
+
+  fun imageURL() : String  =
+    "http://farm$mFarm.staticflickr.com/" +
+            "$mServer/" +
+            "${mId}_$mSecret$IMAGE_SIZE"
+
+
 }
+
+const val PHOTO_DETAILS_TABLE_NAME = "photo_details"
+private const val IMAGE_SIZE = "_m.jpg"

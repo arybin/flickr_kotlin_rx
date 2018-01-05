@@ -1,7 +1,7 @@
 package adapters
 
 import activities.FullPhotoActivity
-import adapters.SearchAdapter.FlickrViewHolder
+import adapters.FlickrAdapter.FlickrViewHolder
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -12,7 +12,7 @@ import models.PhotoDetails
 import org.jetbrains.anko.AnkoContext.Companion
 import views.FlickrRowCell
 
-class SearchAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
+class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
   var searchedList: Array<PhotoDetails>? = null
 
 
@@ -26,20 +26,16 @@ class SearchAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlickrViewHolder {
     val view = FlickrRowCell().createView(Companion.create(parent.context, false))
-    //val view = LayoutInflater.from(parent.context).inflate(R.layout.flickr_row, parent, false)
     return FlickrViewHolder(view)
   }
 
   inner class FlickrViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(photoDetails: PhotoDetails) {
-      val imageURL = "http://farm${photoDetails.mFarm}.staticflickr.com/" +
-          "${photoDetails.mServer}/" +
-          "${photoDetails.mId}_${photoDetails.mSecret}"
-      val size = "_m.jpg"
+
       itemView.apply {
-        Picasso.with(context).load(imageURL + size).into(flickrImagePreview)
+        Picasso.with(context).load(photoDetails.imageURL()).into(flickrImagePreview)
         setOnClickListener {
-          showFullScreenPreview(imageURL, photoDetails.mId, context)
+          showFullScreenPreview(photoDetails.imageURL(), photoDetails.mId, context)
         }
       }
     }

@@ -1,18 +1,13 @@
 package repositories
 
-import api.ApiManager
 import api.await
-import util.Constants
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import models.FlickrResponse
-import timber.log.Timber
-import java.lang.ref.WeakReference
+import mvp.BaseModel
+import util.Constants
 
-class SearchRepository: AbstractRepository() {
-
+class SearchRepository: BaseModel() {
 
     suspend fun requestSearchAsync(searchParameter: String) : FlickrResponse =
-            ApiManager.getFlickrService().getSearchResultsCoroutines(Constants.KEY, searchParameter).await()
+            api.getSearchResultsCoroutines(Constants.KEY, searchParameter).await()
 
 }

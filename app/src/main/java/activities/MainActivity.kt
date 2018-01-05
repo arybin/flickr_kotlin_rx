@@ -1,10 +1,9 @@
 package activities
 
-import adapters.SearchAdapter
+import adapters.FlickrAdapter
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -14,7 +13,6 @@ import android.widget.SearchView
 import com.example.andreirybin.janetest.R
 import com.jakewharton.rxbinding2.widget.RxSearchView
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_main.mainLayout
 import kotlinx.android.synthetic.main.activity_main.pictureList
 import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.coroutines.experimental.android.UI
@@ -22,7 +20,6 @@ import kotlinx.coroutines.experimental.async
 import models.FlickrResponse
 import repositories.SearchRepository
 import timber.log.Timber
-import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
 /*
@@ -35,12 +32,12 @@ Also, added an ability to download an image, it's not perfect and needs to be te
 class MainActivity : AppCompatActivity() {
 
     private var mainActivityRepository: SearchRepository? = null
-    private var flickrAdapter: SearchAdapter? = null
+    private var flickrAdapter: FlickrAdapter? = null
     private var searchString: String? = null
 
     private fun onLoadFinished(response: FlickrResponse?) {
         progressBar.visibility = View.GONE
-        flickrAdapter = pictureList.adapter as? SearchAdapter ?: SearchAdapter()
+        flickrAdapter = pictureList.adapter as? FlickrAdapter ?: FlickrAdapter()
         flickrAdapter?.searchedList = response?.mPhoto?.mPhotoDetailsList
         flickrAdapter?.notifyDataSetChanged()
         pictureList.adapter = flickrAdapter
@@ -100,9 +97,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     override fun onDestroy() {
-        mainActivityRepository?.clearDisposables()
+        mainActivityRepository?.onDestroy()
         super.onDestroy()
     }
 

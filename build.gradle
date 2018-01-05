@@ -35,4 +35,6 @@ ext {
     espressoVersion = '2.2.1'
     supportLibraryVersion = '27.0.2'
     ankoVersion='0.10.4'
+    daggerVersion = '2.4'
+    coroutinesVersion = '0.19.3'
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JaneTest</string>
+    <string name="app_name">Flickr Test</string>
     <string name="search_photos">Search photos</string>
     <string name="share_photo">Share photo</string>
   <string name="download_photo">Download photo</string>

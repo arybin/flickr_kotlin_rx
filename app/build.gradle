@@ -1,16 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion "$buildToolsVersion"
     defaultConfig {
-        applicationId "com.example.andreirybin.janetest"
+        applicationId "com.example.andreirybin.flickrapplication"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -47,9 +49,9 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
 
     //Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.19.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:0.19.3'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesVersion"
 
     //Anko coroutines
     implementation "org.jetbrains.anko:anko-coroutines:$ankoVersion"
@@ -63,6 +65,19 @@ dependencies {
     // Coroutine listeners for Anko Layouts
     implementation "org.jetbrains.anko:anko-sdk25-coroutines:$ankoVersion"
     implementation "org.jetbrains.anko:anko-appcompat-v7-coroutines:$ankoVersion"
+
+    // Architecture components: Room
+    implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
+    kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
+    implementation "android.arch.persistence.room:rxjava2:$architectureComponentsVersion"
+
+    // Multidex
+    implementation "com.android.support:multidex:1.0.2"
+
+    //Dagger
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+
 
 
 }
