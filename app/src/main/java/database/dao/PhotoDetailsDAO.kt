@@ -2,6 +2,7 @@ package database.dao
 
 import android.arch.persistence.room.*
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import models.PHOTO_DETAILS_TABLE_NAME
 import models.PhotoDetails
 
@@ -19,6 +20,9 @@ abstract class PhotoDetailsDAO {
 
     @Query("DELETE FROM $PHOTO_DETAILS_TABLE_NAME")
     abstract fun deleteAllPhotoDetails()
+
+    @Query("SELECT * FROM $PHOTO_DETAILS_TABLE_NAME WHERE mId = :id")
+    abstract fun getImageById(id: String) : Maybe<PhotoDetails>
 
     @Transaction
     open fun clearInsert(photoDetails: Array<PhotoDetails>) {

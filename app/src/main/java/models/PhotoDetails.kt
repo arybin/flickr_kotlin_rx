@@ -41,13 +41,12 @@ data class PhotoDetails(
         @SerializedName("isfriend") var mIsFriend: Int? = null,
         @SerializedName("isfamily") var mIsFamily: Int? = null) {
 
-  fun imageURL() : String  =
-    "http://farm$mFarm.staticflickr.com/" +
-            "$mServer/" +
-            "${mId}_$mSecret$IMAGE_SIZE"
+  private fun imageURL(): String = "http://farm$mFarm.staticflickr.com/$mServer/${mId}_$mSecret"
 
-
+  fun imageURLMed() : String  = "${imageURL()}$IMAGE_SIZE_MEDIUM"
+  fun imageURLLarge(): String = "${imageURL()}$IMAGE_SIZE_LARGE"
 }
 
 const val PHOTO_DETAILS_TABLE_NAME = "photo_details"
-private const val IMAGE_SIZE = "_m.jpg"
+private const val IMAGE_SIZE_MEDIUM = "_m.jpg"
+private const val IMAGE_SIZE_LARGE = "_z.jpg"

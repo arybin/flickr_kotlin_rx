@@ -33,9 +33,9 @@ class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
     fun bind(photoDetails: PhotoDetails) {
 
       itemView.apply {
-        Picasso.with(context).load(photoDetails.imageURL()).into(flickrImagePreview)
+        Picasso.with(context).load(photoDetails.imageURLMed()).into(flickrImagePreview)
         setOnClickListener {
-          showFullScreenPreview(photoDetails.imageURL(), photoDetails.mId, context)
+          showFullScreenPreview(photoDetails.imageURLMed(), photoDetails.mId, context)
         }
       }
     }

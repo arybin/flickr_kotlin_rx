@@ -14,7 +14,7 @@ interface FullPhotoCallback : RepositoryCallbacks<FlickrResponse> {
   fun setPath(path: String?)
 }
 
-class FullPhotoRepository(val callback: WeakReference<FullPhotoCallback>) : AbstractRepository() {
+class FullPhotoRepository(private val callback: WeakReference<FullPhotoCallback>) : AbstractRepository() {
 
   fun getImageInfo(imageId: String) {
     disposables.add(

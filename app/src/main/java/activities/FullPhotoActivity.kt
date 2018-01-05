@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -14,44 +15,47 @@ import kotlinx.android.synthetic.main.activity_full_photo.imagePreview
 import kotlinx.android.synthetic.main.activity_full_photo.photoDescription
 import kotlinx.android.synthetic.main.activity_full_photo.photoTitle
 import models.FlickrResponse
-import repositories.FullPhotoCallback
+import models.PhotoDetails
+import mvp.interfaces.FullPhotoActivityInterface
+import mvp.presenters.FullPhotoPresenter
 import repositories.FullPhotoRepository
 import timber.log.Timber
+import util.Utils
 import java.io.File
 import java.lang.ref.WeakReference
 
-class FullPhotoActivity : AppCompatActivity(), FullPhotoCallback {
+class FullPhotoActivity : AppCompatActivity(), FullPhotoActivityInterface.View {
 
-  private var photoRepository: FullPhotoRepository? = null
+
+  private var presenter: FullPhotoPresenter? = null
   private var absolutePath: String? = null
 
-  val imageURL: String by lazy { intent.getStringExtra(IMAGE_URL) }
   val imageId: String?  by lazy { intent.getStringExtra(IMAGE_ID) }
-  val size = "_z.jpg"
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_full_photo)
-    Picasso.with(this).load(imageURL + size).into(imagePreview)
 
-    photoRepository = FullPhotoRepository(WeakReference(this))
-    imageId?.let {
-      photoRepository?.getImageInfo(imageURL)
-    }
+    presenter = FullPhotoPresenter(WeakReference(this))
+    presenter?.requestPhotoDetails(imageId)
+
   }
 
-  override fun onLoadFinished(response: FlickrResponse?) {
-    response?.let {
-      photoDescription.text = it.mPhotoInfo?.mDescription?.mContent
-      photoTitle.text = it.mPhotoInfo?.mTitle?.mContent
-    }
+  override fun imageInfoLoaded(photoDetails: PhotoDetails) {
+    Picasso.with(this).load(photoDetails.imageURLLarge()).into(imagePreview)
   }
 
-  override fun onError(t: Throwable) {
-    Timber.wtf(t, "Error while getting image's data")
+  override fun loadFinished(flickrResponse: FlickrResponse) {
+    photoDescription.text = flickrResponse.mPhotoInfo?.mDescription?.mContent
+    photoTitle.text = flickrResponse.mPhotoInfo?.mTitle?.mContent
   }
 
-  override fun setPath(path: String?) {
+  override fun showError() {
+    Utils.showSnackbarError(this, R.string.error_getting_photos_for_search_string, Snackbar.LENGTH_SHORT)
+  }
+
+
+  fun setPath(path: String?) {
     absolutePath = path
     Toast.makeText(this, "File downloaded at $absolutePath", Toast.LENGTH_SHORT).show()
   }
@@ -79,7 +83,7 @@ class FullPhotoActivity : AppCompatActivity(), FullPhotoCallback {
 
       R.id.download_photo -> {
         //TODO this should be tested, and perhaps in its own service but for the sake of time it's here
-        photoRepository?.downloadImage(imageURL, imageId)
+        //presenter?.downloadImage(imageURLMed, imageId)
         return true
       }
     }
@@ -87,26 +91,25 @@ class FullPhotoActivity : AppCompatActivity(), FullPhotoCallback {
   }
 
   override fun onDestroy() {
-    photoRepository?.clearDisposables()
+    presenter?.dropView()
     super.onDestroy()
   }
 
   override fun onSupportNavigateUp(): Boolean {
-    photoRepository?.clearDisposables()
+    presenter?.dropView()
     onBackPressed()
     return true
   }
 
   companion object {
-    private const val IMAGE_URL = "imageURL"
+    private const val IMAGE_URL = "imageURLMed"
     private const val IMAGE_ID = "imageId"
 
     fun newIntent(urlString: String, imageId: String?, context: Context): Intent {
-      val intent = Intent(context, FullPhotoActivity::class.java).apply {
+      return Intent(context, FullPhotoActivity::class.java).apply {
         putExtra(IMAGE_URL, urlString)
         putExtra(IMAGE_ID, imageId)
       }
-      return intent
     }
   }
 }
