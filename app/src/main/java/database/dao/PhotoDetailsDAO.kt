@@ -12,16 +12,16 @@ import models.PhotoDetails
 abstract class PhotoDetailsDAO {
 
     @Query("SELECT * FROM $PHOTO_DETAILS_TABLE_NAME")
-    abstract fun getAllPhotoDetails(): Flowable<List<PhotoDetails>>
+    abstract fun getAllPhotoDetails(): Flowable<Array<PhotoDetails>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertPhotoDetails(photos: List<PhotoDetails>)
+    abstract fun insertPhotoDetails(photos: Array<PhotoDetails>)
 
     @Query("DELETE FROM $PHOTO_DETAILS_TABLE_NAME")
     abstract fun deleteAllPhotoDetails()
 
     @Transaction
-    open fun clearInsert(photoDetails: List<PhotoDetails>) {
+    open fun clearInsert(photoDetails: Array<PhotoDetails>) {
         deleteAllPhotoDetails()
         insertPhotoDetails(photoDetails)
     }
