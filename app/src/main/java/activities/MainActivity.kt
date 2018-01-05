@@ -122,6 +122,6 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefre
 
   companion object {
     private const val SEARCH_TERM = "searchTerm"
-    private const val SPAN_COUNT = 3
+    private const val SPAN_COUNT = 2
   }
 }

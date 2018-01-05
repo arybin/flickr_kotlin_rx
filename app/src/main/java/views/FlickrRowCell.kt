@@ -6,7 +6,9 @@ import com.example.andreirybin.janetest.R
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.frameLayout
 import org.jetbrains.anko.imageView
+import org.jetbrains.anko.margin
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.padding
 import org.jetbrains.anko.verticalLayout
@@ -17,11 +19,11 @@ import org.jetbrains.anko.wrapContent
  */
 open class FlickrRowCell : AnkoComponent<Context> {
   override fun createView(ui: AnkoContext<Context>) = with(ui) {
-    verticalLayout {
+    frameLayout {
       lparams {
-        width = wrapContent
+        width = matchParent
         height = wrapContent
-        padding = dip(4)
+        margin = dip(4)
 
         imageView {
           id = R.id.flickrImagePreview

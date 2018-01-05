@@ -60,6 +60,7 @@ dependencies {
     implementation "org.jetbrains.anko:anko-sdk25:$ankoVersion"
     implementation "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion"
     implementation 'org.jetbrains.anko:anko-cardview-v7:0.10.3'
+    implementation "org.jetbrains.anko:anko-recyclerview-v7:$ankoVersion"
 
 
     // Coroutine listeners for Anko Layouts
