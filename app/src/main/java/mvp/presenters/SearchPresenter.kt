@@ -8,6 +8,7 @@ import models.FlickrResponse
 import mvp.BaseModel
 import mvp.interfaces.MainActivityInterface
 import mvp.interfaces.MainActivityInterface.View
+import timber.log.Timber
 import util.Constants
 import java.lang.ref.WeakReference
 
@@ -19,15 +20,25 @@ class SearchPresenter(private val view: WeakReference<View>) : BaseModel(), Main
 
   override fun requestPhotos(requestQuery: String) {
     disposables.add(api.getSearchResults(Constants.KEY, requestQuery)
-        .subscribeOn(Schedulers.io())
-        .doOnSubscribe{ view.get()?.showLoading() }
-        .doOnTerminate { view.get()?.stopLoading() }
-        .doOnError { view.get()?.showError(it) }
+        .applySchedulers()
+        .doOnSubscribe{
+          view.get()?.showLoading()
+        }
+        .doOnTerminate {
+          view.get()?.stopLoading()
+        }
         .flatMap {
-          it.mPhoto?.mPhotoDetailsList?.let { photoDetails ->
-            Observable.fromCallable { db.photoDetailsDao().clearInsert(photoDetails) }
-          } ?: Observable.fromCallable { true }
-        }.subscribe())
+          Observable.fromCallable {
+            it.mPhoto?.mPhotoDetailsList?.let { arrayOfPhotoDetails ->
+              db.photoDetailsDao().clearInsert(arrayOfPhotoDetails)
+            }
+          }.subscribeOn(Schedulers.io())
+        }
+        .subscribe({
+          Timber.d("Result came back")
+        }, {
+          view.get()?.showError(it)
+        }))
 
   }
 

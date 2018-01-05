@@ -3,6 +3,7 @@ package application
 import android.content.Context
 import android.support.multidex.MultiDex
 import android.support.multidex.MultiDexApplication
+import com.facebook.stetho.Stetho
 import dagger.DaggerFlickrComponent
 import dagger.FlickrComponent
 import dagger.injector.Injector
@@ -22,6 +23,7 @@ class FlickrApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         Injector.init(createDaggerComponent())
+        Stetho.initializeWithDefaults(this)
     }
 
     private fun createDaggerComponent(): FlickrComponent =

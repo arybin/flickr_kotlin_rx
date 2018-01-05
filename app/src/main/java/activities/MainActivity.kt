@@ -5,18 +5,18 @@ import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
-import android.view.View
 import android.widget.SearchView
 import com.example.andreirybin.janetest.R
 import com.jakewharton.rxbinding2.widget.RxSearchView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.pictureList
-import kotlinx.android.synthetic.main.activity_main.progressBar
+import kotlinx.android.synthetic.main.activity_main.refreshLayout
 import models.PhotoDetails
 import mvp.interfaces.MainActivityInterface
 import mvp.presenters.SearchPresenter
@@ -32,8 +32,7 @@ I added the extra feature to be able to share the image with other apps that acc
 Also, added an ability to download an image, it's not perfect and needs to be tested more
  */
 
-class MainActivity : AppCompatActivity(), MainActivityInterface.View {
-
+class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefreshLayout.OnRefreshListener {
   private val disposables = CompositeDisposable()
 
   private var presenter: MainActivityInterface.Presenter? = null
@@ -50,6 +49,8 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View {
 
     presenter = SearchPresenter(WeakReference(this))
     presenter?.createSubscription()
+
+    refreshLayout.setOnRefreshListener(this)
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,6 +66,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View {
           .observeOn(AndroidSchedulers.mainThread())
           .skip(1)
           .subscribe { text ->
+              searchString = text.toString()
               presenter?.requestPhotos(text.toString())
           }
       )
@@ -91,18 +93,24 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View {
   }
 
   override fun showError(error: Throwable) {
+    stopLoading()
     Timber.wtf(error, "Error requesting info from Flickr API")
     Utils.showSnackbarError(this, R.string.error_getting_photos_for_search_string, Snackbar.LENGTH_SHORT)
   }
 
   override fun showLoading() {
-    progressBar.visibility = View.VISIBLE
-
+    refreshLayout.isRefreshing = true
   }
 
   override fun stopLoading() {
-    progressBar.visibility = View.GONE
+    refreshLayout.isRefreshing = false
+  }
 
+  override fun onRefresh() {
+    showLoading()
+    searchString?.let {
+      presenter?.requestPhotos(it)
+    }
   }
 
   override fun presentResult(photoDetails: Array<PhotoDetails>) {
