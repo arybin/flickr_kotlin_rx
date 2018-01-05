@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content"
                 tools:background="@drawable/ic_search"
                 android:scaleType="fitCenter"
+                android:transitionName="Mom"
                 />
 
             <TextView

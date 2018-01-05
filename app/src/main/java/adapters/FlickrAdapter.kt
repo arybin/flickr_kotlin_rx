@@ -1,8 +1,11 @@
 package adapters
 
 import activities.FullPhotoActivity
+import activities.MainActivity
 import adapters.FlickrAdapter.FlickrViewHolder
 import android.content.Context
+import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -33,16 +36,22 @@ class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
     fun bind(photoDetails: PhotoDetails) {
 
       itemView.apply {
+        ViewCompat.setTransitionName(flickrImagePreview, photoDetails.mId)
         Picasso.with(context).load(photoDetails.imageURLMed()).into(flickrImagePreview)
         setOnClickListener {
-          showFullScreenPreview(photoDetails.imageURLMed(), photoDetails.mId, context)
+          showFullScreenPreview(photoDetails.mId, context)
         }
       }
     }
 
-    private fun showFullScreenPreview(imageURL: String, imageId: String?, context: Context) {
-      val intent = FullPhotoActivity.newIntent(imageURL, imageId, context)
-      context.startActivity(intent)
+    private fun showFullScreenPreview(imageId: String, context: Context) {
+      val intent = FullPhotoActivity.newIntent(imageId, context)
+      itemView.apply {
+        val activity = context as MainActivity
+        val makeSceneTransitionAnimation = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, flickrImagePreview, ViewCompat.getTransitionName(flickrImagePreview))
+
+        context.startActivity(intent,makeSceneTransitionAnimation.toBundle())
+      }
     }
   }
 }

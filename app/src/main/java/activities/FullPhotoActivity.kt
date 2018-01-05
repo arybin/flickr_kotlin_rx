@@ -5,11 +5,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.andreirybin.janetest.R
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_full_photo.imagePreview
 import kotlinx.android.synthetic.main.activity_full_photo.photoDescription
@@ -18,8 +20,6 @@ import models.FlickrResponse
 import models.PhotoDetails
 import mvp.interfaces.FullPhotoActivityInterface
 import mvp.presenters.FullPhotoPresenter
-import repositories.FullPhotoRepository
-import timber.log.Timber
 import util.Utils
 import java.io.File
 import java.lang.ref.WeakReference
@@ -35,6 +35,9 @@ class FullPhotoActivity : AppCompatActivity(), FullPhotoActivityInterface.View {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_full_photo)
+    supportStartPostponedEnterTransition()
+
+    ViewCompat.setTransitionName(imagePreview, imageId)
 
     presenter = FullPhotoPresenter(WeakReference(this))
     presenter?.requestPhotoDetails(imageId)
@@ -42,7 +45,15 @@ class FullPhotoActivity : AppCompatActivity(), FullPhotoActivityInterface.View {
   }
 
   override fun imageInfoLoaded(photoDetails: PhotoDetails) {
-    Picasso.with(this).load(photoDetails.imageURLLarge()).into(imagePreview)
+    Picasso.with(this).load(photoDetails.imageURLLarge()).into(imagePreview, object : Callback {
+          override fun onSuccess() {
+            supportStartPostponedEnterTransition()
+          }
+
+          override fun onError() {
+            supportStartPostponedEnterTransition()
+          }
+        })
   }
 
   override fun loadFinished(flickrResponse: FlickrResponse) {
@@ -102,12 +113,10 @@ class FullPhotoActivity : AppCompatActivity(), FullPhotoActivityInterface.View {
   }
 
   companion object {
-    private const val IMAGE_URL = "imageURLMed"
     private const val IMAGE_ID = "imageId"
 
-    fun newIntent(urlString: String, imageId: String?, context: Context): Intent {
+    fun newIntent(imageId: String?, context: Context): Intent {
       return Intent(context, FullPhotoActivity::class.java).apply {
-        putExtra(IMAGE_URL, urlString)
         putExtra(IMAGE_ID, imageId)
       }
     }
