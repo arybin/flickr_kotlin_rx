@@ -83,6 +83,9 @@ dependencies {
     implementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
     implementation "com.facebook.stetho:stetho:$stethoVersion"
 
+    //Kotlin code gen
+    implementation 'com.squareup:kotlinpoet:0.6.0'
+
 
 
 }

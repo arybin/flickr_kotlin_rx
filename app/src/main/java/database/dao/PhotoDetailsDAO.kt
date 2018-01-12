@@ -10,16 +10,14 @@ import models.PhotoDetails
  * Created by andrei on 1/4/18.
  */
 @Dao
-abstract class PhotoDetailsDAO {
+abstract class PhotoDetailsDAO : AbstractDao<PhotoDetails> {
 
     @Query("SELECT * FROM $PHOTO_DETAILS_TABLE_NAME")
     abstract fun getAllPhotoDetails(): Flowable<Array<PhotoDetails>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertPhotoDetails(photos: Array<PhotoDetails>)
-
     @Query("DELETE FROM $PHOTO_DETAILS_TABLE_NAME")
     abstract fun deleteAllPhotoDetails()
+
 
     @Query("SELECT * FROM $PHOTO_DETAILS_TABLE_NAME WHERE mId = :id")
     abstract fun getImageById(id: String) : Maybe<PhotoDetails>
@@ -27,6 +25,6 @@ abstract class PhotoDetailsDAO {
     @Transaction
     open fun clearInsert(photoDetails: Array<PhotoDetails>) {
         deleteAllPhotoDetails()
-        insertPhotoDetails(photoDetails)
+        //insertAll(photoDetails)
     }
 }

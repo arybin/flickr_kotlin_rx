@@ -39,7 +39,7 @@ data class PhotoDetails(
         @SerializedName("title") var mTitle: String? = null,
         @SerializedName("ispublic") var mIsPublic: Int? = null,
         @SerializedName("isfriend") var mIsFriend: Int? = null,
-        @SerializedName("isfamily") var mIsFamily: Int? = null) {
+        @SerializedName("isfamily") var mIsFamily: Int? = null){
 
   private fun imageURL(): String = "http://farm$mFarm.staticflickr.com/$mServer/${mId}_$mSecret"
 
