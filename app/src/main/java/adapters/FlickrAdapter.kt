@@ -19,6 +19,7 @@ class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
   var searchedList: Array<PhotoDetails>? = null
 
 
+
   override fun onBindViewHolder(holder: FlickrViewHolder?, position: Int) {
     searchedList?.let {
       holder?.bind(it[position])

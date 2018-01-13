@@ -11,7 +11,7 @@ import retrofit2.http.Url
 interface FlickrApi {
   @GET("/services/rest/?method=flickr.photos.search" +
       "&privacy_filter=1" +
-      "&per_page=30" +
+      "&per_page=3000" +
       "&format=json" +
       "&nojsoncallback=1")
   fun getSearchResults(@Query("api_key") key: String,
