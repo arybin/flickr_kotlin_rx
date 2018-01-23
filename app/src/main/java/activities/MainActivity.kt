@@ -146,11 +146,6 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefre
         adapter.searchedList = photoDetails
     }
 
-    companion object {
-        private const val SEARCH_TERM = "searchTerm"
-        private const val SPAN_COUNT = 2
-    }
-
     inner class MyDiffCallback(val current: Array<PhotoDetails>, val next: Array<PhotoDetails>) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
             current[oldItemPosition] == next[newItemPosition]
@@ -164,5 +159,10 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefre
            Timber.wtf("Hi I am on ${Thread.currentThread().id} thread")
             return next.size
         }
+    }
+
+    companion object {
+        private const val SEARCH_TERM = "searchTerm"
+        private const val SPAN_COUNT = 2
     }
 }

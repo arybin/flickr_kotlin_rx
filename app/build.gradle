@@ -30,23 +30,30 @@ kotlin {
 }
 
 dependencies {
+
+    //Android core
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    api "com.android.support:appcompat-v7:$supportLibraryVersion"
     api "com.android.support:design:$supportLibraryVersion"
     api "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     api "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    api 'com.squareup.retrofit2:retrofit:2.3.0'
-    api 'com.squareup.retrofit2:converter-gson:2.3.0'
-    api 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
-    api 'com.squareup.picasso:picasso:2.5.2'
-    api 'io.reactivex.rxjava2:rxjava:2.1.0'
-    api 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    api 'com.jakewharton.timber:timber:4.6.0'
 
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    //Networking
+    api "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    api "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    api "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    api "com.squareup.picasso:picasso:$picassoVersion"
+
+    //Logging
+    api "com.jakewharton.timber:timber:$timberVersion"
+
+    //RX
+    api "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+    api "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbindingVersion"
 
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
@@ -85,7 +92,6 @@ dependencies {
 
     //Kotlin code gen
     implementation 'com.squareup:kotlinpoet:0.6.0'
-
 
 
 }
