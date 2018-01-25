@@ -36,6 +36,11 @@ class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
         )
     }
 
+    fun clearDisposables() {
+        flickrAdapterFlowable.stopPublisher()
+        disposables.clear()
+    }
+
     fun updateData(nextList: Array<PhotoDetails>) {
         flickrAdapterFlowable.calculateDiffResult(searchedList, nextList)
     }
@@ -89,6 +94,10 @@ class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
 
         fun calculateDiffResult(current: Array<PhotoDetails>, next: Array<PhotoDetails>) {
             publishProcessor.onNext(FlickrAdapterDiffCallback(current, next))
+        }
+
+        fun stopPublisher() {
+            publishProcessor.onComplete()
         }
     }
 

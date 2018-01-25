@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefre
     private var presenter: MainActivityInterface.Presenter? = null
     private var flickrAdapter: FlickrAdapter? = null
     private var searchString: String? = null
+    private var adapter: FlickrAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +97,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefre
     override fun onDestroy() {
         presenter?.dropView()
         disposables.clear()
+        adapter?.clearDisposables()
         super.onDestroy()
     }
 
@@ -121,8 +123,8 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefre
     }
 
     override fun presentResult(photoDetails: Array<PhotoDetails>) {
-        val adapter = pictureList.adapter as? FlickrAdapter ?: FlickrAdapter()
-        adapter.updateData(photoDetails)
+        adapter = pictureList.adapter as? FlickrAdapter ?: FlickrAdapter()
+        adapter?.updateData(photoDetails)
     }
 
     companion object {
