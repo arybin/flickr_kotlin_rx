@@ -121,44 +121,8 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefre
     }
 
     override fun presentResult(photoDetails: Array<PhotoDetails>) {
-
-
         val adapter = pictureList.adapter as? FlickrAdapter ?: FlickrAdapter()
-        val previousList = adapter.searchedList
-
-        previousList?.let {
-
-            Flowable.fromCallable {
-                val callback = MyDiffCallback(it, photoDetails)
-                DiffUtil.calculateDiff(callback)
-            }
-                    .onBackpressureDrop()
-                    .applySchedulers()
-                    .subscribe({
-                        Timber.wtf("Hi I am on ${Thread.currentThread().id} thread")
-                        setAdapterData(photoDetails, adapter)
-                        it.dispatchUpdatesTo(adapter)
-                    })
-        } ?: setAdapterData(photoDetails, adapter)
-    }
-
-    private fun setAdapterData(photoDetails: Array<PhotoDetails>, adapter: FlickrAdapter) {
-        adapter.searchedList = photoDetails
-    }
-
-    inner class MyDiffCallback(val current: Array<PhotoDetails>, val next: Array<PhotoDetails>) : DiffUtil.Callback() {
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            current[oldItemPosition] == next[newItemPosition]
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-                current[oldItemPosition] == next[newItemPosition]
-
-
-        override fun getOldListSize(): Int = current.size
-        override fun getNewListSize(): Int {
-           Timber.wtf("Hi I am on ${Thread.currentThread().id} thread")
-            return next.size
-        }
+        adapter.updateData(photoDetails)
     }
 
     companion object {
