@@ -93,7 +93,11 @@ dependencies {
     //Kotlin code gen
     implementation 'com.squareup:kotlinpoet:0.6.0'
 
+    //
+    testImplementation 'junit:junit:4.12'
 
+
+    compile 'junit:junit:4.12'
 }
 repositories {
     mavenCentral()

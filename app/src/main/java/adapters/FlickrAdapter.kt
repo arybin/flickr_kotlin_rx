@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso
 import extensions.applySchedulers
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.flickr_row.view.flickrImagePreview
@@ -22,24 +23,22 @@ import org.jetbrains.anko.AnkoContext.Companion
 import timber.log.Timber
 import views.FlickrRowCell
 
-class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
+class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>(), Disposable {
+
     private var searchedList: Array<PhotoDetails> = emptyArray()
     private val flickrAdapterFlowable = FlickerAdapterFlowable()
-    private val disposables = CompositeDisposable()
+    private val disposable: Disposable
+
 
     init {
-        disposables.add(flickrAdapterFlowable.flowable
+        disposable = flickrAdapterFlowable.flowable
                 .applySchedulers()
                 .subscribe({
                     it.dispatchUpdatesTo(this@FlickrAdapter)
                 })
-        )
+
     }
 
-    fun clearDisposables() {
-        flickrAdapterFlowable.stopPublisher()
-        disposables.clear()
-    }
 
     fun updateData(nextList: Array<PhotoDetails>) {
         flickrAdapterFlowable.calculateDiffResult(searchedList, nextList)
@@ -57,6 +56,12 @@ class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlickrViewHolder {
         val view = FlickrRowCell().createView(Companion.create(parent.context, false))
         return FlickrViewHolder(view)
+    }
+
+    override fun isDisposed(): Boolean = disposable.isDisposed
+
+    override fun dispose() {
+        disposable.dispose()
     }
 
     inner class FlickrViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -88,8 +93,10 @@ class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
 
         val flowable: Flowable<DiffUtil.DiffResult> =
                 Flowable.fromPublisher(publishProcessor)
-                        .flatMap { Flowable.fromCallable {
-                            DiffUtil.calculateDiff(it) }.subscribeOn(Schedulers.computation())
+                        .flatMap {
+                            Flowable.fromCallable {
+                                DiffUtil.calculateDiff(it)
+                            }.subscribeOn(Schedulers.computation())
                         }
 
         fun calculateDiffResult(current: Array<PhotoDetails>, next: Array<PhotoDetails>) {

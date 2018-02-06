@@ -23,4 +23,9 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.example.andreirybin.janetest", appContext.getPackageName());
     }
+
+    @Test
+    public void testFlowableFlow() {
+        assertEquals(0, 0);
+    }
 }
