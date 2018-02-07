@@ -93,7 +93,10 @@ dependencies {
     //Kotlin code gen
     implementation 'com.squareup:kotlinpoet:0.6.0'
 
-    //
+    // Paging
+    implementation 'android.arch.paging:runtime:1.0.0-alpha4-1'
+
+    //Tests
     testImplementation 'junit:junit:4.12'
 
 

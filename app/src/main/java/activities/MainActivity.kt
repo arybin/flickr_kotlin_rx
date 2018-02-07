@@ -49,9 +49,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface.View, SwipeRefre
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         flickrAdapter = FlickrAdapter()
-        flickrAdapter?.let {
-            disposables.add(it)
-        }
+
         pictureList.apply {
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(context, SPAN_COUNT)

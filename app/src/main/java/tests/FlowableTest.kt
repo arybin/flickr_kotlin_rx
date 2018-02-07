@@ -21,7 +21,7 @@ class FlowableTest {
         var expectedResult = 0
 
         val calculator = FlowableCalculator()
-        calculator.flowable
+        val disposable = calculator.flowable
                 .subscribeOn(Schedulers.io())
                 .onBackpressureLatest()
                 .observeOn(Schedulers.computation())
@@ -33,7 +33,7 @@ class FlowableTest {
                 })
 
         try{
-            Thread.sleep(1000)
+            Thread.sleep(150)
         } catch (e: InterruptedException) {
             //Make sure the threading pool is all setup
         }
@@ -45,9 +45,11 @@ class FlowableTest {
         calculator.postToFlowable(RegularFlowable(4))
         calculator.postToFlowable(FlowableWithDelay(5))
         calculator.postToFlowable(FlowableWithDelay(6))
+        disposable.dispose()
         calculator.postToFlowable(RegularFlowable(7))
         calculator.postToFlowable(FlowableWithDelay(8))
         calculator.postToFlowable(FlowableWithDelay(9))
+
     }
 
 

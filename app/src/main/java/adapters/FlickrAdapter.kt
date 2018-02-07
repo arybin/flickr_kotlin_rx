@@ -23,22 +23,26 @@ import org.jetbrains.anko.AnkoContext.Companion
 import timber.log.Timber
 import views.FlickrRowCell
 
-class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>(), Disposable {
+class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>() {
 
     private var searchedList: Array<PhotoDetails> = emptyArray()
     private val flickrAdapterFlowable = FlickerAdapterFlowable()
-    private val disposable: Disposable
-
+    private val disposable = CompositeDisposable()
 
     init {
-        disposable = flickrAdapterFlowable.flowable
+        disposable.add( flickrAdapterFlowable.flowable
                 .applySchedulers()
                 .subscribe({
                     it.dispatchUpdatesTo(this@FlickrAdapter)
                 })
+        )
 
     }
 
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+        disposable.clear()
+        super.onDetachedFromRecyclerView(recyclerView)
+    }
 
     fun updateData(nextList: Array<PhotoDetails>) {
         flickrAdapterFlowable.calculateDiffResult(searchedList, nextList)
@@ -56,12 +60,6 @@ class FlickrAdapter : RecyclerView.Adapter<FlickrViewHolder>(), Disposable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlickrViewHolder {
         val view = FlickrRowCell().createView(Companion.create(parent.context, false))
         return FlickrViewHolder(view)
-    }
-
-    override fun isDisposed(): Boolean = disposable.isDisposed
-
-    override fun dispose() {
-        disposable.dispose()
     }
 
     inner class FlickrViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
